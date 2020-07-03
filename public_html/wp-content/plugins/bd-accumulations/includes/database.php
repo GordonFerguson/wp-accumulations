@@ -22,15 +22,15 @@ $bd_accumulations_mantra_db_version = '1.4';
 // Get API key from the database
 function bd_accumulations_get_api_key()
 {
-   $options = get_option('bd324_foobot_api_settings');
-   return $options['bd324_foobot_api_key'];
+   $options = get_option('bd324_acc_api_settings');
+   return $options['bd324_acc_api_key'];
 }
 
 // Get API username from the database
 function bd_accumulations_get_api_user()
 {
-   $options = get_option('bd324_foobot_api_settings');
-   return $options['bd324_foobot_api_user'];
+   $options = get_option('bd324_acc_api_settings');
+   return $options['bd324_acc_api_user'];
 }
 
 /**
@@ -195,10 +195,10 @@ function bd_accumulations_fetch_db_accumulations()
  */
 
 // Add accumulation data to database
-function bd_accumulations_add_db_accumulations($accumulation_api_data)
+function bd_accumulations_add_db_accumulations($accumulation_data)
 {
 
-   // error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
+   error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
 
    global $wpdb;
    // Turn on errors display
@@ -208,11 +208,11 @@ function bd_accumulations_add_db_accumulations($accumulation_api_data)
    $time = current_time('timestamp');
 
    // Loop each accumulation
-   foreach ($accumulation_api_data as $data) {
+   foreach ($accumulation_data as $data) {
       $accumulation_data = array();
-      //echo '<pre><code>';
-      //var_dump( $data );
-      //echo '</code></pre>';
+
+      // Debug
+      bd_pretty_debug( $accumulation_data, $name = 'accumulation_data' );
 
       // Loop the accumulation data
       foreach ($data as $key => $value) {
@@ -231,12 +231,6 @@ function bd_accumulations_add_db_accumulations($accumulation_api_data)
       //var_dump( $accumulation_data );
       //echo '</code></pre>';
 
-      // vars
-      $uuid    = $accumulation_data[0]['uuid'];
-      $userId  = $accumulation_data[1]['userId'];
-      $mac     = $accumulation_data[2]['mac'];
-      $name    = $accumulation_data[3]['name'];
-
       //echo '<pre><code>';
       //var_dump( $uuid );
       //echo '</code></pre>';
@@ -246,13 +240,13 @@ function bd_accumulations_add_db_accumulations($accumulation_api_data)
          $table_name,
          array(
             'timestamp' => $time,
-            'name' => $name,
-            'uuid' => $uuid,
+            'mantraName' => $accumulation_data['mantra_name'],
+            'tally' => $accumulation_data['accum'],
          ),
          array(
             '%d',
             '%s',
-            '%s'
+            '%f'
          )
       );
 

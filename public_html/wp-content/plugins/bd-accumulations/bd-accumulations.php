@@ -31,7 +31,7 @@
  * ================
  */
 
-function bd324_foobot_plugin_init()
+function bd324_acc_plugin_init()
 {
 
 	function bdf_enqueue_styles() {
@@ -41,7 +41,7 @@ function bd324_foobot_plugin_init()
 	add_action('wp_enqueue_scripts','bdf_enqueue_styles');
 
 }
-add_action('plugins_loaded', 'bd324_foobot_plugin_init');
+add_action('plugins_loaded', 'bd324_acc_plugin_init');
 
 /**
  * Activation Hooks
