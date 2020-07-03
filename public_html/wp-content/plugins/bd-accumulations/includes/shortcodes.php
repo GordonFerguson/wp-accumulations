@@ -9,13 +9,13 @@
 
 
 // Show the data from a specific device
-function bd_foobot_shortcode_show_sensors( $atts )
+function bd_accumulations_shortcode_show_sensors( $atts )
 {
   // e.g. [foobot-show-data device="BainBot"]
 
   // Debug
   // error_log("== SHORTCODE: Start [foobot-show-data] ==", 0);
-  // error_log("FUNCTION: bd_foobot_shortcode_show_sensors", 0);
+  // error_log("FUNCTION: bd_accumulations_shortcode_show_sensors", 0);
 
 
   // Get attributes from shortcode
@@ -27,7 +27,7 @@ function bd_foobot_shortcode_show_sensors( $atts )
   $device_name = $device_data["device"];
 
   // Show the data
-  $output = bd_foobot_show_sensors( $device_name ); // sensors.php
+  $output = bd_accumulations_show_sensors( $device_name ); // sensors.php
 
   // Output sensor data
   ob_start();
@@ -42,4 +42,4 @@ function bd_foobot_shortcode_show_sensors( $atts )
   return $content;
 
 }
-add_shortcode('foobot-show-data', 'bd_foobot_shortcode_show_sensors');
+add_shortcode('foobot-show-data', 'bd_accumulations_shortcode_show_sensors');

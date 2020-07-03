@@ -5,12 +5,12 @@
  */
 
 // Device
-global $bd_foobot_device_db_version;
-$bd_foobot_device_db_version = '1.2';
+global $bd_accumulations_device_db_version;
+$bd_accumulations_device_db_version = '1.2';
 
 // Sensors
-global $bd_foobot_sensor_db_version;
-$bd_foobot_sensor_db_version = '1.4';
+global $bd_accumulations_sensor_db_version;
+$bd_accumulations_sensor_db_version = '1.4';
 
 /** Get Options
  * ============
@@ -20,14 +20,14 @@ $bd_foobot_sensor_db_version = '1.4';
  */
 
 // Get API key from the database
-function bd_foobot_get_api_key()
+function bd_accumulations_get_api_key()
 {
    $options = get_option('baindesign_foobot_api_settings');
    return $options['baindesign_foobot_api_key'];
 }
 
 // Get API username from the database
-function bd_foobot_get_api_user()
+function bd_accumulations_get_api_user()
 {
    $options = get_option('baindesign_foobot_api_settings');
    return $options['baindesign_foobot_api_user'];
@@ -46,12 +46,12 @@ function bd_foobot_get_api_user()
  */
 
 // Create table to store sensor data
-function bd_foobot_create_sensor_table()
+function bd_accumulations_create_sensor_table()
 {
    global $wpdb;
-   global $bd_foobot_sensor_db_version;
+   global $bd_accumulations_sensor_db_version;
 
-   $table_name = $wpdb->prefix . 'bd_foobot_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
 
    $charset_collate = $wpdb->get_charset_collate();
 
@@ -79,16 +79,16 @@ function bd_foobot_create_sensor_table()
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 
-   add_option('bd_foobot_sensor_db_version', $bd_foobot_sensor_db_version);
+   add_option('bd_accumulations_sensor_db_version', $bd_accumulations_sensor_db_version);
 }
 
 // Create table to store device data
-function bd_foobot_create_device_table()
+function bd_accumulations_create_device_table()
 {
    global $wpdb;
-   global $bd_foobot_device_db_version;
+   global $bd_accumulations_device_db_version;
 
-   $table_name = $wpdb->prefix . 'bd_foobot_device_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_device_data';
 
    $charset_collate = $wpdb->get_charset_collate();
 
@@ -103,7 +103,7 @@ function bd_foobot_create_device_table()
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 
-   add_option('bd_foobot_device_db_version', $bd_foobot_device_db_version);
+   add_option('bd_accumulations_device_db_version', $bd_accumulations_device_db_version);
 }
 
 /**
@@ -113,7 +113,7 @@ function bd_foobot_create_device_table()
  */
 
 // Fetch sensor data
-function bd_foobot_fetch_latest_sensor_data()
+function bd_accumulations_fetch_latest_sensor_data()
 {
 
    // To DO
@@ -121,7 +121,7 @@ function bd_foobot_fetch_latest_sensor_data()
 
    // Vars
    global $wpdb;
-   $table_name = $wpdb->prefix . 'bd_foobot_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
 
    // $data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$table_name}` ORDER BY `id` DESC LIMIT 1", $sensor) );
    $data = $wpdb->get_row("SELECT * FROM `{$table_name}` ORDER BY `id` DESC LIMIT 1", ARRAY_A);
@@ -131,20 +131,20 @@ function bd_foobot_fetch_latest_sensor_data()
 
 // Query the database for sensor 
 // data from a specific device
-function bd_foobot_fetch_db_sensors($uuid)
+function bd_accumulations_fetch_db_sensors($uuid)
 {
 
    // Debug
-   error_log("FUNCTION: bd_foobot_fetch_db_sensors(" . $uuid . ")", 0);
+   error_log("FUNCTION: bd_accumulations_fetch_db_sensors(" . $uuid . ")", 0);
 
    global $wpdb;
    $wpdb->show_errors();
 
    // Vars
-   $table_name = $wpdb->prefix . 'bd_foobot_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
 
    // Update the device table if required
-   bd_foobot_update_sensor_data($uuid);
+   bd_accumulations_update_sensor_data($uuid);
 
    // Now we query the db.
    $data = $wpdb->get_results("SELECT * FROM `{$table_name}` WHERE `uuid`='$uuid' ORDER BY `id` DESC LIMIT 1", ARRAY_A);
@@ -156,20 +156,20 @@ function bd_foobot_fetch_db_sensors($uuid)
 }
 
 // Fetch device data
-function bd_foobot_fetch_db_devices()
+function bd_accumulations_fetch_db_devices()
 {
 
    // debug
-   error_log("FUNCTION: bd_foobot_fetch_db_devices()", 0);
+   error_log("FUNCTION: bd_accumulations_fetch_db_devices()", 0);
 
    global $wpdb;
    $wpdb->show_errors();
 
    // Vars
-   $table_name = $wpdb->prefix . 'bd_foobot_device_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_device_data';
 
    // Update the device table if required
-   bd_foobot_update_device_data();
+   bd_accumulations_update_device_data();
 
    // Get all the results
    // TO DO: Only return results from the last 24 hours?
@@ -217,16 +217,16 @@ function bd_foobot_fetch_db_devices()
  */
 
 // Add device data to database
-function bd_foobot_add_db_devices($device_api_data)
+function bd_accumulations_add_db_devices($device_api_data)
 {
 
-   // error_log("FUNCTION: bd_foobot_add_db_devices", 0);
+   // error_log("FUNCTION: bd_accumulations_add_db_devices", 0);
 
    global $wpdb;
    // Turn on errors display
    //$wpdb->show_errors();
 
-   $table_name = $wpdb->prefix . 'bd_foobot_device_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_device_data';
    $time = current_time('timestamp');
 
    // Loop each device
@@ -287,7 +287,7 @@ function bd_foobot_add_db_devices($device_api_data)
 }
 
 // Add sensor data to database
-function bd_foobot_add_db_sensors($data)
+function bd_accumulations_add_db_sensors($data)
 {
 
    global $wpdb;
@@ -295,7 +295,7 @@ function bd_foobot_add_db_sensors($data)
    // DEBUG
    // $wpdb->show_errors(); // Turn on errors display
 
-   $table_name = $wpdb->prefix . 'bd_foobot_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
 
    // Vars
    $time                   = $data['start'];
@@ -361,14 +361,14 @@ function bd_foobot_add_db_sensors($data)
 
 }
 
-function bd_foobot_update_device_data()
+function bd_accumulations_update_device_data()
 {
    /**
     * Request an API call
     * (checks if transient set, if
     * not, makes API call)
     */
-   $data = bd_foobot_call_api_trans_devices();
+   $data = bd_accumulations_call_api_trans_devices();
 
    if ($data) {
       /**
@@ -376,18 +376,18 @@ function bd_foobot_update_device_data()
        * (i.e. transient not set)
        * update the database
        */
-      bd_foobot_add_db_devices($data);
+      bd_accumulations_add_db_devices($data);
    }
 }
 
-function bd_foobot_update_sensor_data($uuid)
+function bd_accumulations_update_sensor_data($uuid)
 {
    /**
     * Request an API call
     * (checks if transient set, if
     * not, makes API call)
     */
-   $data = bd_foobot_call_api_trans_sensors($uuid);
+   $data = bd_accumulations_call_api_trans_sensors($uuid);
 
    if ($data) {
       /**
@@ -395,6 +395,6 @@ function bd_foobot_update_sensor_data($uuid)
        * (i.e. transient not set)
        * update the database
        */
-      bd_foobot_add_db_sensors($data);
+      bd_accumulations_add_db_sensors($data);
    }
 }

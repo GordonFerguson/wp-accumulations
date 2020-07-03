@@ -7,10 +7,10 @@
  */
 
 // Show the data from a specific device
-function bd_foobot_show_sensors( $device_name )
+function bd_accumulations_show_sensors( $device_name )
 {
   // debug
-  // error_log("FUNCTION: bd_foobot_show_sensors (" .$device_name. ")", 0);
+  // error_log("FUNCTION: bd_accumulations_show_sensors (" .$device_name. ")", 0);
 
   // Get the target device UUID
   $uuid = bd_get_foobot_device_uuid( $device_name );
@@ -20,7 +20,7 @@ function bd_foobot_show_sensors( $device_name )
   }
   
   // Fetch the sensor data from the database
-  $sensor_data = bd_foobot_fetch_db_sensors( $uuid );
+  $sensor_data = bd_accumulations_fetch_db_sensors( $uuid );
 
   if (count($sensor_data)> 0){
 
@@ -71,13 +71,13 @@ function bd_get_temp_now($uuid)
     * First, we need to check our transient and update the data in the 
     * custom table if necessary. 
     */
-    bd_foobot_update_sensor_data($uuid);
+    bd_accumulations_update_sensor_data($uuid);
 
    /**
     * Having done that, we can proceed with questioning the database.
     */
 
-   $data = bd_foobot_fetch_latest_sensor_data();
+   $data = bd_accumulations_fetch_latest_sensor_data();
 
    return $data;
 }

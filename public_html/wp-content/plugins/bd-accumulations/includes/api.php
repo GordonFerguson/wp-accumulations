@@ -15,12 +15,12 @@
  * table. 
  * 
  */
-function bd_foobot_call_api_devices()
+function bd_accumulations_call_api_devices()
 {
 
    // Vars
-   $key = bd_foobot_get_api_key();
-   $user = bd_foobot_get_api_user();
+   $key = bd_accumulations_get_api_key();
+   $user = bd_accumulations_get_api_user();
    $url = 'https://api.foobot.io/v2/owner/' . $user . '/device/';
    $args = array('headers' => array('X-API-KEY-TOKEN' => $key));
 
@@ -36,7 +36,7 @@ function bd_foobot_call_api_devices()
    $api_data = json_decode( $body, true);
 
    // debug
-   error_log("FUNCTION: bd_foobot_call_api_devices", 0);
+   error_log("FUNCTION: bd_accumulations_call_api_devices", 0);
 
    return $api_data;
 }
@@ -58,9 +58,9 @@ function bd_foobot_call_api_devices()
  * 
  */
 
-function bd_foobot_call_api_sensors( $uuid )
+function bd_accumulations_call_api_sensors( $uuid )
 {
-   $key = bd_foobot_get_api_key();
+   $key = bd_accumulations_get_api_key();
 
    $url = 'https://api.foobot.io/v2/device/' . $uuid . '/datapoint/0/last/0/?' . $key;
    $args = array(
@@ -80,7 +80,7 @@ function bd_foobot_call_api_sensors( $uuid )
    $api_data = json_decode( $body, true); // Output array
 
    // debug
-   // error_log("FUNCTION: bd_foobot_call_api_sensors", 0);
+   // error_log("FUNCTION: bd_accumulations_call_api_sensors", 0);
    return $api_data;
 }
 
@@ -91,12 +91,12 @@ function bd_foobot_call_api_sensors( $uuid )
  */
 
 // Update device data
-function bd_foobot_call_api_trans_devices()
+function bd_accumulations_call_api_trans_devices()
 {
    global $wpdb;
 
    // debug
-   error_log("FUNCTION: bd_foobot_call_api_trans_devices", 0);
+   error_log("FUNCTION: bd_accumulations_call_api_trans_devices", 0);
 
    // If an API call has been made within the last 24 hours, 
    // return.
@@ -107,7 +107,7 @@ function bd_foobot_call_api_trans_devices()
    }
 
    // Get the device data
-   $device_data = bd_foobot_call_api_devices();
+   $device_data = bd_accumulations_call_api_devices();
 
    // Transient is set for 24 hours
    set_transient('foobot-api-device-updated', 1, (60 * 60 * 24));
@@ -119,12 +119,12 @@ function bd_foobot_call_api_trans_devices()
 }
 
 // Update sensor data
-function bd_foobot_call_api_trans_sensors( $uuid )
+function bd_accumulations_call_api_trans_sensors( $uuid )
 {
    global $wpdb;
 
    // debug
-   // error_log("FUNCTION: bd_foobot_call_api_trans_sensors", 0);
+   // error_log("FUNCTION: bd_accumulations_call_api_trans_sensors", 0);
 
    // If an API call has been made within the last 5 mins, 
    // return.
@@ -136,7 +136,7 @@ function bd_foobot_call_api_trans_sensors( $uuid )
    }
 
    // Get the device data
-   $data = bd_foobot_call_api_sensors( $uuid );
+   $data = bd_accumulations_call_api_sensors( $uuid );
    if (is_wp_error($data)) {
       // error_log("Error: No data from Foobot sensor API ", 0);
       return false; // Bail early
