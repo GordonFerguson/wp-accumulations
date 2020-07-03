@@ -22,15 +22,15 @@ $bd_accumulations_mantra_db_version = '1.4';
 // Get API key from the database
 function bd_accumulations_get_api_key()
 {
-   $options = get_option('baindesign_foobot_api_settings');
-   return $options['baindesign_foobot_api_key'];
+   $options = get_option('bd324_foobot_api_settings');
+   return $options['bd324_foobot_api_key'];
 }
 
 // Get API username from the database
 function bd_accumulations_get_api_user()
 {
-   $options = get_option('baindesign_foobot_api_settings');
-   return $options['baindesign_foobot_api_user'];
+   $options = get_option('bd324_foobot_api_settings');
+   return $options['bd324_foobot_api_user'];
 }
 
 /**
@@ -194,14 +194,6 @@ function bd_accumulations_fetch_db_accumulations()
  * =========================
  */
 
-/**
- * After fetching data via an API call, add it to
- * one of the two custom tables we've created. This 
- * allows us to reduce the number of API calls we 
- * make each time we need to display the data, and 
- * avoid API limits. 
- */
-
 // Add accumulation data to database
 function bd_accumulations_add_db_accumulations($accumulation_api_data)
 {
@@ -210,7 +202,7 @@ function bd_accumulations_add_db_accumulations($accumulation_api_data)
 
    global $wpdb;
    // Turn on errors display
-   //$wpdb->show_errors();
+   $wpdb->show_errors();
 
    $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
    $time = current_time('timestamp');

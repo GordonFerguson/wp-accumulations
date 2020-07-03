@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Wp Accumualtions
+ * Plugin Name: WP Accumualtions
  * Plugin URI: https://foobot.bain.design
  * Description: Accumulations
  * Author: Bain Design
@@ -20,7 +20,7 @@
 	include( $path . 'includes/database.php');
 	include( $path . 'admin/admin.php');
 	include( $path . 'includes/shortcodes.php');
-	include( $path . 'includes/mantras.php');
+	include( $path . 'includes/accumulations.php');
 	include( $path . 'includes/api.php');
 
 	// Misc
@@ -31,7 +31,7 @@
  * ================
  */
 
-function baindesign_foobot_plugin_init()
+function bd324_foobot_plugin_init()
 {
 
 	function bdf_enqueue_styles() {
@@ -41,7 +41,7 @@ function baindesign_foobot_plugin_init()
 	add_action('wp_enqueue_scripts','bdf_enqueue_styles');
 
 }
-add_action('plugins_loaded', 'baindesign_foobot_plugin_init');
+add_action('plugins_loaded', 'bd324_foobot_plugin_init');
 
 /**
  * Activation Hooks

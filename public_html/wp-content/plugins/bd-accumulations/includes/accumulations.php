@@ -2,20 +2,20 @@
 
 /**
  * =============================
- * Get readings from the mantras
+ * Get accumulation data
  * =============================
  */
 
-// Show the data from a specific accumulation
-function bd_accumulations_show_mantras( $accumulation_name )
+// Show the data for a specific mantra
+function bd_accumulations_show_accumulations( $mantra_name )
 {
   // debug
-  // error_log("FUNCTION: bd_accumulations_show_mantras (" .$accumulation_name. ")", 0);
+  // error_log("FUNCTION: bd_accumulations_show_mantras (" .$mantra_name. ")", 0);
 
   // Get the target accumulation UUID
-  $uuid = bd_get_foobot_accumulation_uuid( $accumulation_name );
+  $uuid = bd_accumulations_get_accumulation_uuid( $mantra_name );
   if($uuid==='error_accumulation_not_found'){
-    $content = '<div class="foobot-data foobot-data__error">Sorry, the accumulation "'.$accumulation_name.'" has not been found. Please check the accumulation name and try again.</div>';
+    $content = '<div class="foobot-data foobot-data__error">Sorry, the accumulation "'.$mantra_name.'" has not been found. Please check the accumulation name and try again.</div>';
     return $content;
   }
   
@@ -49,7 +49,7 @@ function bd_accumulations_show_mantras( $accumulation_name )
     $content.= '<li class="mantra mantra--hum"><span class="mantra__label">' . __('Humidity', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Hum_data . '</span><span class="mantra__unit">' . $data['unitHum'] . '</span></li>' ;
     $content.= '<li class="mantra mantra--all"><span class="mantra__label">' . __('All', 'aq-data-foobot') . '</span><span class="mantra__data">' . $All_data . '</span><span class="mantra__unit">' . $data['unitAllpollu'] . '</span></li>' ;
     $content.= '</ul>';
-    $content.= sprintf( __('<div class="mantra__data-age">Data from %s updated %d<span class="s">s</span> ago</div>', 'aq-data-foobot'), $accumulation_name, $data_age );
+    $content.= sprintf( __('<div class="mantra__data-age">Data from %s updated %d<span class="s">s</span> ago</div>', 'aq-data-foobot'), $mantra_name, $data_age );
     $content.= '</div>';
   } else {
     // Error message
