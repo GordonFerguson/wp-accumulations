@@ -2,15 +2,15 @@
 
 /**
  * =============================
- * Get readings from the sensors
+ * Get readings from the mantras
  * =============================
  */
 
 // Show the data from a specific device
-function bd_accumulations_show_sensors( $device_name )
+function bd_accumulations_show_mantras( $device_name )
 {
   // debug
-  // error_log("FUNCTION: bd_accumulations_show_sensors (" .$device_name. ")", 0);
+  // error_log("FUNCTION: bd_accumulations_show_mantras (" .$device_name. ")", 0);
 
   // Get the target device UUID
   $uuid = bd_get_foobot_device_uuid( $device_name );
@@ -19,13 +19,13 @@ function bd_accumulations_show_sensors( $device_name )
     return $content;
   }
   
-  // Fetch the sensor data from the database
-  $sensor_data = bd_accumulations_fetch_db_sensors( $uuid );
+  // Fetch the mantra data from the database
+  $mantra_data = bd_accumulations_fetch_db_mantras( $uuid );
 
-  if (count($sensor_data)> 0){
+  if (count($mantra_data)> 0){
 
     // Remove one level from the array
-    $data = $sensor_data[0];
+    $data = $mantra_data[0];
 
     // Data age
     $now = time();
@@ -40,16 +40,16 @@ function bd_accumulations_show_sensors( $device_name )
     $All_data = round( $data['datapointAllpollu'], 1 );
 
 
-    // Output sensor data
-    $content = '<div class="foobot-data"><ul class="sensors">';
-    $content.= '<li class="sensor sensor--tmp"><span class="sensor__label">' . __('Temperature', 'aq-data-foobot') . '</span><span class="sensor__data">' . $Tmp_data . '</span><span class="sensor__unit">' . $data['unitTmp'] . '</span></li>' ;
-    $content.= '<li class="sensor sensor--pm"><span class="sensor__label">' . __('PM', 'aq-data-foobot') . '</span><span class="sensor__data">' . $Pm_data . '</span><span class="sensor__unit">µg/m3</span></li>' ;
-    $content.= '<li class="sensor sensor--co2"><span class="sensor__label">' . __('Co2', 'aq-data-foobot') . '</span><span class="sensor__data">' . $Co2_data . '</span><span class="sensor__unit">' . $data['unitCo2'] . '</span></li>' ;
-    $content.= '<li class="sensor sensor--voc"><span class="sensor__label">' . __('VOC', 'aq-data-foobot') . '</span><span class="sensor__data">' . $Voc_data . '</span><span class="sensor__unit">' . $data['unitVoc'] . '</span></li>' ;
-    $content.= '<li class="sensor sensor--hum"><span class="sensor__label">' . __('Humidity', 'aq-data-foobot') . '</span><span class="sensor__data">' . $Hum_data . '</span><span class="sensor__unit">' . $data['unitHum'] . '</span></li>' ;
-    $content.= '<li class="sensor sensor--all"><span class="sensor__label">' . __('All', 'aq-data-foobot') . '</span><span class="sensor__data">' . $All_data . '</span><span class="sensor__unit">' . $data['unitAllpollu'] . '</span></li>' ;
+    // Output mantra data
+    $content = '<div class="foobot-data"><ul class="mantras">';
+    $content.= '<li class="mantra mantra--tmp"><span class="mantra__label">' . __('Temperature', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Tmp_data . '</span><span class="mantra__unit">' . $data['unitTmp'] . '</span></li>' ;
+    $content.= '<li class="mantra mantra--pm"><span class="mantra__label">' . __('PM', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Pm_data . '</span><span class="mantra__unit">µg/m3</span></li>' ;
+    $content.= '<li class="mantra mantra--co2"><span class="mantra__label">' . __('Co2', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Co2_data . '</span><span class="mantra__unit">' . $data['unitCo2'] . '</span></li>' ;
+    $content.= '<li class="mantra mantra--voc"><span class="mantra__label">' . __('VOC', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Voc_data . '</span><span class="mantra__unit">' . $data['unitVoc'] . '</span></li>' ;
+    $content.= '<li class="mantra mantra--hum"><span class="mantra__label">' . __('Humidity', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Hum_data . '</span><span class="mantra__unit">' . $data['unitHum'] . '</span></li>' ;
+    $content.= '<li class="mantra mantra--all"><span class="mantra__label">' . __('All', 'aq-data-foobot') . '</span><span class="mantra__data">' . $All_data . '</span><span class="mantra__unit">' . $data['unitAllpollu'] . '</span></li>' ;
     $content.= '</ul>';
-    $content.= sprintf( __('<div class="sensor__data-age">Data from %s updated %d<span class="s">s</span> ago</div>', 'aq-data-foobot'), $device_name, $data_age );
+    $content.= sprintf( __('<div class="mantra__data-age">Data from %s updated %d<span class="s">s</span> ago</div>', 'aq-data-foobot'), $device_name, $data_age );
     $content.= '</div>';
   } else {
     // Error message
@@ -71,13 +71,13 @@ function bd_get_temp_now($uuid)
     * First, we need to check our transient and update the data in the 
     * custom table if necessary. 
     */
-    bd_accumulations_update_sensor_data($uuid);
+    bd_accumulations_update_mantra_data($uuid);
 
    /**
     * Having done that, we can proceed with questioning the database.
     */
 
-   $data = bd_accumulations_fetch_latest_sensor_data();
+   $data = bd_accumulations_fetch_latest_mantra_data();
 
    return $data;
 }

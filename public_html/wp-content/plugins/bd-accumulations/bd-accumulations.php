@@ -20,7 +20,7 @@
 	include( $path . 'includes/database.php');
 	include( $path . 'admin/admin.php');
 	include( $path . 'includes/shortcodes.php');
-	include( $path . 'includes/sensors.php');
+	include( $path . 'includes/mantras.php');
 	include( $path . 'includes/api.php');
 
 	// Misc
@@ -49,5 +49,5 @@ add_action('plugins_loaded', 'baindesign_foobot_plugin_init');
  */
 
 // Create database tables on plugin activation
-register_activation_hook(__FILE__, 'bd_accumulations_create_sensor_table');
+register_activation_hook(__FILE__, 'bd_accumulations_create_mantra_table');
 register_activation_hook(__FILE__, 'bd_accumulations_create_device_table');

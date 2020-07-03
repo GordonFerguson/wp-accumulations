@@ -5,7 +5,7 @@
  * ==============================================
  * 
  * Using our API key, we question the API to get the UUID of the 
- * Foobot device. With this info, we can go on to call sensor data. 
+ * Foobot device. With this info, we can go on to call mantra data. 
  * 
  * This retrieved data should then be added to the database.
  * 
@@ -58,7 +58,7 @@ function bd_accumulations_call_api_devices()
  * 
  */
 
-function bd_accumulations_call_api_sensors( $uuid )
+function bd_accumulations_call_api_mantras( $uuid )
 {
    $key = bd_accumulations_get_api_key();
 
@@ -80,7 +80,7 @@ function bd_accumulations_call_api_sensors( $uuid )
    $api_data = json_decode( $body, true); // Output array
 
    // debug
-   // error_log("FUNCTION: bd_accumulations_call_api_sensors", 0);
+   // error_log("FUNCTION: bd_accumulations_call_api_mantras", 0);
    return $api_data;
 }
 
@@ -113,32 +113,32 @@ function bd_accumulations_call_api_trans_devices()
    set_transient('foobot-api-device-updated', 1, (60 * 60 * 24));
 
    // Debug
-   // error_log("NOTICE: Foobot sensor data has been updated! Next update > 24 hours.", 0);
+   // error_log("NOTICE: Foobot mantra data has been updated! Next update > 24 hours.", 0);
 
    return $device_data;
 }
 
-// Update sensor data
-function bd_accumulations_call_api_trans_sensors( $uuid )
+// Update mantra data
+function bd_accumulations_call_api_trans_mantras( $uuid )
 {
    global $wpdb;
 
    // debug
-   // error_log("FUNCTION: bd_accumulations_call_api_trans_sensors", 0);
+   // error_log("FUNCTION: bd_accumulations_call_api_trans_mantras", 0);
 
    // If an API call has been made within the last 5 mins, 
    // return.
    if (1 == get_transient('foobot-api-data-updated-' . $uuid )) {
       // Debug
-      // error_log("No Foobot Sensor API call made at this time.", 0);
+      // error_log("No Foobot mantra API call made at this time.", 0);
 
       return;
    }
 
    // Get the device data
-   $data = bd_accumulations_call_api_sensors( $uuid );
+   $data = bd_accumulations_call_api_mantras( $uuid );
    if (is_wp_error($data)) {
-      // error_log("Error: No data from Foobot sensor API ", 0);
+      // error_log("Error: No data from Foobot mantra API ", 0);
       return false; // Bail early
    }
 
@@ -146,7 +146,7 @@ function bd_accumulations_call_api_trans_sensors( $uuid )
    set_transient('foobot-api-data-updated-' . $uuid, 1, (60 * 10));
 
    // Debug
-   // error_log("Foobot sensor data has been updated! Next update > 10 mins.", 0);
+   // error_log("Foobot mantra data has been updated! Next update > 10 mins.", 0);
 
    return $data;
 }

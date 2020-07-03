@@ -8,9 +8,9 @@
 global $bd_accumulations_device_db_version;
 $bd_accumulations_device_db_version = '1.2';
 
-// Sensors
-global $bd_accumulations_sensor_db_version;
-$bd_accumulations_sensor_db_version = '1.4';
+// mantras
+global $bd_accumulations_mantra_db_version;
+$bd_accumulations_mantra_db_version = '1.4';
 
 /** Get Options
  * ============
@@ -40,18 +40,16 @@ function bd_accumulations_get_api_user()
  */
 
 /**
- * Create the 2 custom tables needed for this plugin, 
- * one to store the device data, another to store the
- * sensor readings. 
+ * Create the custom tables needed for this plugin
  */
 
-// Create table to store sensor data
-function bd_accumulations_create_sensor_table()
+// Create table to store mantra data
+function bd_accumulations_create_mantra_table()
 {
    global $wpdb;
-   global $bd_accumulations_sensor_db_version;
+   global $bd_accumulations_mantra_db_version;
 
-   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_mantra_data';
 
    $charset_collate = $wpdb->get_charset_collate();
 
@@ -79,7 +77,7 @@ function bd_accumulations_create_sensor_table()
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 
-   add_option('bd_accumulations_sensor_db_version', $bd_accumulations_sensor_db_version);
+   add_option('bd_accumulations_mantra_db_version', $bd_accumulations_mantra_db_version);
 }
 
 // Create table to store device data
@@ -112,39 +110,39 @@ function bd_accumulations_create_device_table()
  * ============================
  */
 
-// Fetch sensor data
-function bd_accumulations_fetch_latest_sensor_data()
+// Fetch mantra data
+function bd_accumulations_fetch_latest_mantra_data()
 {
 
    // To DO
-   // Pass the sensor you want to this function
+   // Pass the mantra you want to this function
 
    // Vars
    global $wpdb;
-   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_mantra_data';
 
-   // $data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$table_name}` ORDER BY `id` DESC LIMIT 1", $sensor) );
+   // $data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$table_name}` ORDER BY `id` DESC LIMIT 1", $mantra) );
    $data = $wpdb->get_row("SELECT * FROM `{$table_name}` ORDER BY `id` DESC LIMIT 1", ARRAY_A);
 
    return $data;
 }
 
-// Query the database for sensor 
+// Query the database for mantra 
 // data from a specific device
-function bd_accumulations_fetch_db_sensors($uuid)
+function bd_accumulations_fetch_db_mantras($uuid)
 {
 
    // Debug
-   error_log("FUNCTION: bd_accumulations_fetch_db_sensors(" . $uuid . ")", 0);
+   error_log("FUNCTION: bd_accumulations_fetch_db_mantras(" . $uuid . ")", 0);
 
    global $wpdb;
    $wpdb->show_errors();
 
    // Vars
-   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_mantra_data';
 
    // Update the device table if required
-   bd_accumulations_update_sensor_data($uuid);
+   bd_accumulations_update_mantra_data($uuid);
 
    // Now we query the db.
    $data = $wpdb->get_results("SELECT * FROM `{$table_name}` WHERE `uuid`='$uuid' ORDER BY `id` DESC LIMIT 1", ARRAY_A);
@@ -286,8 +284,8 @@ function bd_accumulations_add_db_devices($device_api_data)
    }
 }
 
-// Add sensor data to database
-function bd_accumulations_add_db_sensors($data)
+// Add mantra data to database
+function bd_accumulations_add_db_mantras($data)
 {
 
    global $wpdb;
@@ -295,7 +293,7 @@ function bd_accumulations_add_db_sensors($data)
    // DEBUG
    // $wpdb->show_errors(); // Turn on errors display
 
-   $table_name = $wpdb->prefix . 'bd_accumulations_sensor_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_mantra_data';
 
    // Vars
    $time                   = $data['start'];
@@ -354,7 +352,7 @@ function bd_accumulations_add_db_sensors($data)
       )
    );
 
-   // error_log("EVENT | Database: New sensor data added", 0);
+   // error_log("EVENT | Database: New mantra data added", 0);
 
    // DEBUG
    // $wpdb->print_error(); // Show error if any
@@ -380,14 +378,14 @@ function bd_accumulations_update_device_data()
    }
 }
 
-function bd_accumulations_update_sensor_data($uuid)
+function bd_accumulations_update_mantra_data($uuid)
 {
    /**
     * Request an API call
     * (checks if transient set, if
     * not, makes API call)
     */
-   $data = bd_accumulations_call_api_trans_sensors($uuid);
+   $data = bd_accumulations_call_api_trans_mantras($uuid);
 
    if ($data) {
       /**
@@ -395,6 +393,6 @@ function bd_accumulations_update_sensor_data($uuid)
        * (i.e. transient not set)
        * update the database
        */
-      bd_accumulations_add_db_sensors($data);
+      bd_accumulations_add_db_mantras($data);
    }
 }

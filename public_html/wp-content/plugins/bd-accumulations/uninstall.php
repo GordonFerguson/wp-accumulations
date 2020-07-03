@@ -11,7 +11,7 @@ delete_option($options_name);
 
 // drop a custom database tables
 global $wpdb;
-$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}bd_accumulations_sensor_data");
+$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}bd_accumulations_mantra_data");
 $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}bd_accumulations_device_data");
 
 // Delete our transients
