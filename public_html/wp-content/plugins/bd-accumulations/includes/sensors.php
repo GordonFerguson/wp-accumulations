@@ -6,16 +6,16 @@
  * =============================
  */
 
-// Show the data from a specific device
-function bd_accumulations_show_mantras( $device_name )
+// Show the data from a specific accumulation
+function bd_accumulations_show_mantras( $accumulation_name )
 {
   // debug
-  // error_log("FUNCTION: bd_accumulations_show_mantras (" .$device_name. ")", 0);
+  // error_log("FUNCTION: bd_accumulations_show_mantras (" .$accumulation_name. ")", 0);
 
-  // Get the target device UUID
-  $uuid = bd_get_foobot_device_uuid( $device_name );
-  if($uuid==='error_device_not_found'){
-    $content = '<div class="foobot-data foobot-data__error">Sorry, the device "'.$device_name.'" has not been found. Please check the device name and try again.</div>';
+  // Get the target accumulation UUID
+  $uuid = bd_get_foobot_accumulation_uuid( $accumulation_name );
+  if($uuid==='error_accumulation_not_found'){
+    $content = '<div class="foobot-data foobot-data__error">Sorry, the accumulation "'.$accumulation_name.'" has not been found. Please check the accumulation name and try again.</div>';
     return $content;
   }
   
@@ -49,7 +49,7 @@ function bd_accumulations_show_mantras( $device_name )
     $content.= '<li class="mantra mantra--hum"><span class="mantra__label">' . __('Humidity', 'aq-data-foobot') . '</span><span class="mantra__data">' . $Hum_data . '</span><span class="mantra__unit">' . $data['unitHum'] . '</span></li>' ;
     $content.= '<li class="mantra mantra--all"><span class="mantra__label">' . __('All', 'aq-data-foobot') . '</span><span class="mantra__data">' . $All_data . '</span><span class="mantra__unit">' . $data['unitAllpollu'] . '</span></li>' ;
     $content.= '</ul>';
-    $content.= sprintf( __('<div class="mantra__data-age">Data from %s updated %d<span class="s">s</span> ago</div>', 'aq-data-foobot'), $device_name, $data_age );
+    $content.= sprintf( __('<div class="mantra__data-age">Data from %s updated %d<span class="s">s</span> ago</div>', 'aq-data-foobot'), $accumulation_name, $data_age );
     $content.= '</div>';
   } else {
     // Error message

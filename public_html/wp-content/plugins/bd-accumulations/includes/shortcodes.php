@@ -8,10 +8,10 @@
  */
 
 
-// Show the data from a specific device
+// Show the data from a specific accumulation
 function bd_accumulations_shortcode_show_mantras( $atts )
 {
-  // e.g. [foobot-show-data device="BainBot"]
+  // e.g. [foobot-show-data accumulation="BainBot"]
 
   // Debug
   // error_log("== SHORTCODE: Start [foobot-show-data] ==", 0);
@@ -19,15 +19,15 @@ function bd_accumulations_shortcode_show_mantras( $atts )
 
 
   // Get attributes from shortcode
-  $device_data = shortcode_atts( array(
-      'device' => '',
+  $accumulation_data = shortcode_atts( array(
+      'accumulation' => '',
   ), $atts );
   
   // Store atts in var
-  $device_name = $device_data["device"];
+  $accumulation_name = $accumulation_data["accumulation"];
 
   // Show the data
-  $output = bd_accumulations_show_mantras( $device_name ); // mantras.php
+  $output = bd_accumulations_show_mantras( $accumulation_name ); // mantras.php
 
   // Output mantra data
   ob_start();

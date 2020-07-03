@@ -1,34 +1,34 @@
 <?php
 
 /** 
- * Get device UUID
+ * Get accumulation UUID
  * ===============
  * For use in shortcode where the user
- * gives the name of the device they want 
+ * gives the name of the accumulation they want 
  * to get the data from.
  */
 
-function bd_get_foobot_device_uuid( $device_name )
+function bd_get_foobot_accumulation_uuid( $accumulation_name )
 {
-   $devices = bd_accumulations_fetch_db_devices();
+   $accumulations = bd_accumulations_fetch_db_accumulations();
 
    // Get array columns
-   $col = array_column( $devices, 'name' );
+   $col = array_column( $accumulations, 'name' );
    
    // Get the array key
-   $name = $device_name . ' ';   // API returns device names
+   $name = $accumulation_name . ' ';   // API returns accumulation names
                                  // with a trailing space.
 
    $key = array_search( $name, $col );
    if( $key===false ){
-      return 'error_device_not_found';
-      // error_log('Device "' . $device_name . '" not found', 0);
+      return 'error_accumulation_not_found';
+      // error_log('accumulation "' . $accumulation_name . '" not found', 0);
    } else {
-      $uuid = $devices[$key]["uuid"];   
+      $uuid = $accumulations[$key]["uuid"];   
       return $uuid;
 
       // debug
-      // error_log("FUNCTION: bd_get_foobot_device_uuid (" .$device_name. ")", 0);
+      // error_log("FUNCTION: bd_get_foobot_accumulation_uuid (" .$accumulation_name. ")", 0);
    }
 
 

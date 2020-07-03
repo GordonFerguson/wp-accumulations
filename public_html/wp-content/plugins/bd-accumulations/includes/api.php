@@ -5,7 +5,7 @@
  * ==============================================
  * 
  * Using our API key, we question the API to get the UUID of the 
- * Foobot device. With this info, we can go on to call mantra data. 
+ * Foobot accumulation. With this info, we can go on to call mantra data. 
  * 
  * This retrieved data should then be added to the database.
  * 
@@ -15,13 +15,13 @@
  * table. 
  * 
  */
-function bd_accumulations_call_api_devices()
+function bd_accumulations_call_api_accumulations()
 {
 
    // Vars
    $key = bd_accumulations_get_api_key();
    $user = bd_accumulations_get_api_user();
-   $url = 'https://api.foobot.io/v2/owner/' . $user . '/device/';
+   $url = 'https://api.foobot.io/v2/owner/' . $user . '/accumulation/';
    $args = array('headers' => array('X-API-KEY-TOKEN' => $key));
 
    // Request
@@ -36,7 +36,7 @@ function bd_accumulations_call_api_devices()
    $api_data = json_decode( $body, true);
 
    // debug
-   error_log("FUNCTION: bd_accumulations_call_api_devices", 0);
+   error_log("FUNCTION: bd_accumulations_call_api_accumulations", 0);
 
    return $api_data;
 }
@@ -48,8 +48,8 @@ function bd_accumulations_call_api_devices()
  * Get the API data
  * ================
  * 
- * Now that we have the device UUID, we can call for 
- * the data from the device.
+ * Now that we have the accumulation UUID, we can call for 
+ * the data from the accumulation.
  * 
  * We must never call this function directly! Instead, we must
  * retrieve the data we have stored in our custom database table (see 
@@ -62,7 +62,7 @@ function bd_accumulations_call_api_mantras( $uuid )
 {
    $key = bd_accumulations_get_api_key();
 
-   $url = 'https://api.foobot.io/v2/device/' . $uuid . '/datapoint/0/last/0/?' . $key;
+   $url = 'https://api.foobot.io/v2/accumulation/' . $uuid . '/datapoint/0/last/0/?' . $key;
    $args = array(
       'headers' => array(
          'X-API-KEY-TOKEN' => $key
@@ -90,32 +90,32 @@ function bd_accumulations_call_api_mantras( $uuid )
  * limit. 
  */
 
-// Update device data
-function bd_accumulations_call_api_trans_devices()
+// Update accumulation data
+function bd_accumulations_call_api_trans_accumulations()
 {
    global $wpdb;
 
    // debug
-   error_log("FUNCTION: bd_accumulations_call_api_trans_devices", 0);
+   error_log("FUNCTION: bd_accumulations_call_api_trans_accumulations", 0);
 
    // If an API call has been made within the last 24 hours, 
    // return.
-   if (1 == get_transient('foobot-api-device-updated')) {
+   if (1 == get_transient('foobot-api-accumulation-updated')) {
       // Debug
-      // error_log("NOTICE: No Foobot Device API call made at this time.", 0);
+      // error_log("NOTICE: No Foobot accumulation API call made at this time.", 0);
       return;
    }
 
-   // Get the device data
-   $device_data = bd_accumulations_call_api_devices();
+   // Get the accumulation data
+   $accumulation_data = bd_accumulations_call_api_accumulations();
 
    // Transient is set for 24 hours
-   set_transient('foobot-api-device-updated', 1, (60 * 60 * 24));
+   set_transient('foobot-api-accumulation-updated', 1, (60 * 60 * 24));
 
    // Debug
    // error_log("NOTICE: Foobot mantra data has been updated! Next update > 24 hours.", 0);
 
-   return $device_data;
+   return $accumulation_data;
 }
 
 // Update mantra data
@@ -135,7 +135,7 @@ function bd_accumulations_call_api_trans_mantras( $uuid )
       return;
    }
 
-   // Get the device data
+   // Get the accumulation data
    $data = bd_accumulations_call_api_mantras( $uuid );
    if (is_wp_error($data)) {
       // error_log("Error: No data from Foobot mantra API ", 0);

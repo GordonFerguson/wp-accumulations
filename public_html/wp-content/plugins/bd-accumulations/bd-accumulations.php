@@ -50,4 +50,4 @@ add_action('plugins_loaded', 'baindesign_foobot_plugin_init');
 
 // Create database tables on plugin activation
 register_activation_hook(__FILE__, 'bd_accumulations_create_mantra_table');
-register_activation_hook(__FILE__, 'bd_accumulations_create_device_table');
+register_activation_hook(__FILE__, 'bd_accumulations_create_accumulation_table');

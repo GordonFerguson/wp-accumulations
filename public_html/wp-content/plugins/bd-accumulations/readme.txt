@@ -9,11 +9,11 @@ Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display the Air Quality Data from multiple Foobot devices via a shortcode.  
+Display the Air Quality Data from multiple Foobot accumulations via a shortcode.  
 
 == Description ==
 
-This plugin lets you show the data from one or more Foobot Air Quality Monitor devices on your WordPress site in a simple table. Apart from a Foobot device, you will need to [request an API key](https://api.foobot.io/apidoc/index.html "request a Foobot API key") from the Foobot API website. 
+This plugin lets you show the data from one or more Foobot Air Quality Monitor accumulations on your WordPress site in a simple table. Apart from a Foobot accumulation, you will need to [request an API key](https://api.foobot.io/apidoc/index.html "request a Foobot API key") from the Foobot API website. 
 
 == Installation ==
 
@@ -21,12 +21,12 @@ This plugin lets you show the data from one or more Foobot Air Quality Monitor d
 1. Locate the plugin file and upload to your website Plugins folder.
 1. Log into WordPress and activate the plugin. 
 1. Once the plugin is activated, go to `Settings > Foobot API` and add your Foobot API username and API key ([Get your Foobot API key here](https://api.foobot.io/apidoc/index.html "Foobot API")).
-1. Use the shortcode `[foobot-show-data device="foo"]`, where `foo` is your device name, to show the world your AQ data!
+1. Use the shortcode `[foobot-show-data accumulation="foo"]`, where `foo` is your accumulation name, to show the world your AQ data!
 
 
 == Frequently Asked Questions ==
 
-= Do I need to have a Foobot device to use this plugin =
+= Do I need to have a Foobot accumulation to use this plugin =
 
 No, but you do need access to one via the Foobot API in order to display data on your site. 
 

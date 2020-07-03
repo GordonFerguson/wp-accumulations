@@ -4,9 +4,9 @@
  * Set database versions
  */
 
-// Device
-global $bd_accumulations_device_db_version;
-$bd_accumulations_device_db_version = '1.2';
+// accumulation
+global $bd_accumulations_accumulation_db_version;
+$bd_accumulations_accumulation_db_version = '1.2';
 
 // mantras
 global $bd_accumulations_mantra_db_version;
@@ -56,21 +56,8 @@ function bd_accumulations_create_mantra_table()
    $sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
       timestamp int NOT NULL,
-      uuid tinytext NOT NULL,
-		unitTime tinytext NULL,
-		datapointTime float NULL,
-		unitPm tinytext NULL,
-		datapointPm float NULL,
-		unitTmp tinytext NULL,
-		datapointTmp float NULL,
-		unitHum tinytext NULL,
-		datapointHum float NULL,
-		unitCo2 tinytext NULL,
-		datapointCo2 float NULL,
-		unitVoc tinytext NULL,
-		datapointVoc float NULL,
-		unitAllpollu tinytext NULL,
-		datapointAllpollu float NULL,
+      mantraName tinytext NOT NULL,
+		mantraDesc tinytext NULL,
 		PRIMARY KEY  (id)
 	) $charset_collate;";
 
@@ -80,28 +67,29 @@ function bd_accumulations_create_mantra_table()
    add_option('bd_accumulations_mantra_db_version', $bd_accumulations_mantra_db_version);
 }
 
-// Create table to store device data
-function bd_accumulations_create_device_table()
+// Create table to store accumulation data
+function bd_accumulations_create_accumulation_table()
 {
    global $wpdb;
-   global $bd_accumulations_device_db_version;
+   global $bd_accumulations_accumulation_db_version;
 
-   $table_name = $wpdb->prefix . 'bd_accumulations_device_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
 
    $charset_collate = $wpdb->get_charset_collate();
 
    $sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		timestamp int NOT NULL,
-		name tinytext NOT NULL,
-		uuid tinytext NOT NULL,
+		mantraName tinytext NOT NULL,
+		userName tinytext NOT NULL,
+		tally float NOT NULL,
 		PRIMARY KEY  (id)
 	) $charset_collate;";
 
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 
-   add_option('bd_accumulations_device_db_version', $bd_accumulations_device_db_version);
+   add_option('bd_accumulations_accumulation_db_version', $bd_accumulations_accumulation_db_version);
 }
 
 /**
@@ -128,7 +116,7 @@ function bd_accumulations_fetch_latest_mantra_data()
 }
 
 // Query the database for mantra 
-// data from a specific device
+// data from a specific accumulation
 function bd_accumulations_fetch_db_mantras($uuid)
 {
 
@@ -141,7 +129,7 @@ function bd_accumulations_fetch_db_mantras($uuid)
    // Vars
    $table_name = $wpdb->prefix . 'bd_accumulations_mantra_data';
 
-   // Update the device table if required
+   // Update the accumulation table if required
    bd_accumulations_update_mantra_data($uuid);
 
    // Now we query the db.
@@ -153,21 +141,21 @@ function bd_accumulations_fetch_db_mantras($uuid)
    $wpdb->print_error();
 }
 
-// Fetch device data
-function bd_accumulations_fetch_db_devices()
+// Fetch accumulation data
+function bd_accumulations_fetch_db_accumulations()
 {
 
    // debug
-   error_log("FUNCTION: bd_accumulations_fetch_db_devices()", 0);
+   error_log("FUNCTION: bd_accumulations_fetch_db_accumulations()", 0);
 
    global $wpdb;
    $wpdb->show_errors();
 
    // Vars
-   $table_name = $wpdb->prefix . 'bd_accumulations_device_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
 
-   // Update the device table if required
-   bd_accumulations_update_device_data();
+   // Update the accumulation table if required
+   bd_accumulations_update_accumulation_data();
 
    // Get all the results
    // TO DO: Only return results from the last 24 hours?
@@ -186,7 +174,7 @@ function bd_accumulations_fetch_db_devices()
    //$latest = array();
    $latest = $wpdb->get_results("SELECT * FROM `{$table_name}` WHERE `timestamp`= $timestamp ORDER BY `id` DESC", ARRAY_A);
    if (count($latest) > 0) {
-      return $latest;   // returns an array with the latest devices
+      return $latest;   // returns an array with the latest accumulations
    } else {
       return;
    }
@@ -214,48 +202,48 @@ function bd_accumulations_fetch_db_devices()
  * avoid API limits. 
  */
 
-// Add device data to database
-function bd_accumulations_add_db_devices($device_api_data)
+// Add accumulation data to database
+function bd_accumulations_add_db_accumulations($accumulation_api_data)
 {
 
-   // error_log("FUNCTION: bd_accumulations_add_db_devices", 0);
+   // error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
 
    global $wpdb;
    // Turn on errors display
    //$wpdb->show_errors();
 
-   $table_name = $wpdb->prefix . 'bd_accumulations_device_data';
+   $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
    $time = current_time('timestamp');
 
-   // Loop each device
-   foreach ($device_api_data as $data) {
-      $device_data = array();
+   // Loop each accumulation
+   foreach ($accumulation_api_data as $data) {
+      $accumulation_data = array();
       //echo '<pre><code>';
       //var_dump( $data );
       //echo '</code></pre>';
 
-      // Loop the device data
+      // Loop the accumulation data
       foreach ($data as $key => $value) {
-         $device_data[] = array($key => $value);
+         $accumulation_data[] = array($key => $value);
          //echo '<pre><code>';
          //var_dump( $key. ' ' .$value );
          //echo '</code></pre>';
 
-         //echo '<h5>Device data in loop</h5>';
+         //echo '<h5>accumulation data in loop</h5>';
          //echo '<pre><code>';
-         //var_dump( $device_data );
+         //var_dump( $accumulation_data );
          //echo '</code></pre>';
       }
-      //echo '<h5>Device data after loop</h5>';
+      //echo '<h5>accumulation data after loop</h5>';
       //echo '<pre><code>';
-      //var_dump( $device_data );
+      //var_dump( $accumulation_data );
       //echo '</code></pre>';
 
       // vars
-      $uuid    = $device_data[0]['uuid'];
-      $userId  = $device_data[1]['userId'];
-      $mac     = $device_data[2]['mac'];
-      $name    = $device_data[3]['name'];
+      $uuid    = $accumulation_data[0]['uuid'];
+      $userId  = $accumulation_data[1]['userId'];
+      $mac     = $accumulation_data[2]['mac'];
+      $name    = $accumulation_data[3]['name'];
 
       //echo '<pre><code>';
       //var_dump( $uuid );
@@ -276,7 +264,7 @@ function bd_accumulations_add_db_devices($device_api_data)
          )
       );
 
-      // error_log("EVENT: Device data inserted in table for " . $uuid, 0);
+      // error_log("EVENT: accumulation data inserted in table for " . $uuid, 0);
 
       // Show error if any
       //$wpdb->print_error();
@@ -359,14 +347,14 @@ function bd_accumulations_add_db_mantras($data)
 
 }
 
-function bd_accumulations_update_device_data()
+function bd_accumulations_update_accumulation_data()
 {
    /**
     * Request an API call
     * (checks if transient set, if
     * not, makes API call)
     */
-   $data = bd_accumulations_call_api_trans_devices();
+   $data = bd_accumulations_call_api_trans_accumulations();
 
    if ($data) {
       /**
@@ -374,7 +362,7 @@ function bd_accumulations_update_device_data()
        * (i.e. transient not set)
        * update the database
        */
-      bd_accumulations_add_db_devices($data);
+      bd_accumulations_add_db_accumulations($data);
    }
 }
 
