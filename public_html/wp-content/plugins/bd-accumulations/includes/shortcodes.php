@@ -57,3 +57,31 @@ function bd_accumulations_shortcode_add()
   return $content;
 }
 add_shortcode('acc_form', 'bd_accumulations_shortcode_add');
+
+/**
+ * Show challenge data
+ */
+function bd_accumulations_shortcode_challenges($atts)
+{
+  // Get attributes from shortcode
+  $challenge_data = shortcode_atts(array(
+    'id' => '',
+  ), $atts);
+
+  // Store atts in var
+  $id = $challenge_data["id"];
+
+  // Get total tally for challenge
+  
+
+  ob_start();
+    $total = bd324_acc_fetch_challenge_total( $id );
+    $name = bd324_acc_fetch_challenge_name( $id );
+    //bd_pretty_debug($name);
+    echo $name[0]->challengeName . ': ' . $total . '<br>';
+    $content =  ob_get_contents();
+  ob_clean();
+
+  return $content;
+}
+add_shortcode('acc_challenge', 'bd_accumulations_shortcode_challenges');

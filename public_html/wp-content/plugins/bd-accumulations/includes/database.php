@@ -1,4 +1,14 @@
 <?php
+/**
+* http://codex.wordpress.org/Creating_Tables_with_Plugins
+*
+* In case your are developing and want to check plugin use:
+*
+* DROP TABLE IF EXISTS wp_cte;
+* DELETE FROM wp_options WHERE option_name = 'bd_accumulations_accumulation_db_version';
+*
+* to drop table and option
+*/
 
 /**
  * Set database versions
@@ -6,11 +16,15 @@
 
 // accumulation
 global $bd_accumulations_accumulation_db_version;
-$bd_accumulations_accumulation_db_version = '1.2';
+$bd_accumulations_accumulation_db_version = '0.3';
 
 // mantras
 global $bd_accumulations_mantra_db_version;
-$bd_accumulations_mantra_db_version = '1.4';
+$bd_accumulations_mantra_db_version = '0.1';
+
+// challenges
+global $bd_accumulations_challenge_db_version;
+$bd_accumulations_challenge_db_version = '0.7';
 
 /** Get Options
  * ============
@@ -54,12 +68,12 @@ function bd_accumulations_create_mantra_table()
    $charset_collate = $wpdb->get_charset_collate();
 
    $sql = "CREATE TABLE $table_name (
-		id mediumint(9) NOT NULL AUTO_INCREMENT,
+      id mediumint(9) NOT NULL AUTO_INCREMENT,
       timestamp int NOT NULL,
       mantraName tinytext NOT NULL,
-		mantraDesc tinytext NULL,
-		PRIMARY KEY  (id)
-	) $charset_collate;";
+      mantraDesc tinytext NULL,
+      PRIMARY KEY  (id)
+   ) $charset_collate;";
 
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
@@ -78,18 +92,94 @@ function bd_accumulations_create_accumulation_table()
    $charset_collate = $wpdb->get_charset_collate();
 
    $sql = "CREATE TABLE $table_name (
-		id mediumint(9) NOT NULL AUTO_INCREMENT,
-		timestamp int NOT NULL,
-		mantraName tinytext NOT NULL,
-		userName tinytext NOT NULL,
-		tally float NOT NULL,
-		PRIMARY KEY  (id)
-	) $charset_collate;";
+      id mediumint(9) NOT NULL AUTO_INCREMENT,
+      timestamp int NOT NULL,
+      mantraName tinytext NOT NULL,
+      userName tinytext NOT NULL,
+      tally float NOT NULL,
+      PRIMARY KEY  (id)
+   ) $charset_collate;";
+
+   require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+   dbDelta($sql);
+   
+   // save current database version for later use (on upgrade)
+   add_option('bd_accumulations_accumulation_db_version', $bd_accumulations_accumulation_db_version);
+
+   // Updates
+   $installed_ver = get_option('bd_accumulations_accumulation_db_version');
+
+   if ($installed_ver != $bd_accumulations_accumulation_db_version) {
+      error_log("Update table", 0);
+
+      $sql = "CREATE TABLE $table_name (
+         id mediumint(9) NOT NULL AUTO_INCREMENT,
+         timestamp int NOT NULL,
+         challengeID mediumint(9) NOT NULL,
+         userID mediumint(9) NOT NULL,
+         tally float NOT NULL,
+         PRIMARY KEY  (id)
+      ) $charset_collate;";
+
+      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+      dbDelta($sql);
+
+      // notice that we are updating option, rather than adding it
+      update_option('bd_accumulations_accumulation_db_version', $bd_accumulations_accumulation_db_version);
+   }
+}
+
+// Create table to store challenge data
+function bd_accumulations_create_challenge_table()
+{
+   global $wpdb;
+   global $bd_accumulations_challenge_db_version;
+
+   $table_name = $wpdb->prefix . 'bd_accumulations_challenge_data';
+
+   $charset_collate = $wpdb->get_charset_collate();
+
+   $sql = "CREATE TABLE $table_name (
+      id mediumint(9) NOT NULL AUTO_INCREMENT,
+      timestamp int NOT NULL,
+      challengeName tinytext NOT NULL,
+      userName tinytext NOT NULL,
+      tally float NULL,
+      idMantra mediumint(9) NOT NULL,
+      PRIMARY KEY  (id)
+   ) $charset_collate;";
 
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 
-   add_option('bd_accumulations_accumulation_db_version', $bd_accumulations_accumulation_db_version);
+   // save current database version for later use (on upgrade)
+   add_option('bd_accumulations_challenge_db_version', $bd_accumulations_challenge_db_version);
+
+   // Updates
+   $installed_ver = get_option('bd_accumulations_challenge_db_version');
+
+   if ($installed_ver != $bd_accumulations_challenge_db_version) {
+      error_log("Update table", 0);
+
+      $sql = "CREATE TABLE $table_name (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            timestamp int NOT NULL,
+            dateStart int NOT NULL,
+            dateEnd int NOT NULL,
+            countGoal int NOT NULL,
+            countStretchGoal int NOT NULL,
+            challengeName tinytext NOT NULL,
+            tally float NULL,
+            idMantra mediumint(9) NOT NULL,
+            PRIMARY KEY  (id)
+         ) $charset_collate;";
+
+      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+      dbDelta($sql);
+
+      // notice that we are updating option, rather than adding it
+      update_option('bd_accumulations_challenge_db_version', $bd_accumulations_challenge_db_version);
+   }
 }
 
 /**
@@ -188,6 +278,27 @@ function bd_accumulations_fetch_db_accumulations()
    // $wpdb->print_error();
 }
 
+// Fetch challenge data by ID
+function bd_accumulations_fetch_db_challenge($id)
+{
+   global $wpdb;
+   $wpdb->show_errors();
+
+   // Vars
+   $table_name = $wpdb->prefix . 'bd_accumulations_challenge_data';
+
+   // Update the table if required
+   // bd_accumulations_update_mantra_data($uuid);
+
+   // Now we query the db.
+   $data = $wpdb->get_results("SELECT * FROM `{$table_name}` WHERE `id`='$id' ORDER BY `id` DESC LIMIT 1", ARRAY_A);
+
+   return $data;
+
+   // Show error if any
+   $wpdb->print_error();
+}
+
 /**
  * =========================
  * Add data to the database
@@ -197,31 +308,31 @@ function bd_accumulations_fetch_db_accumulations()
 // Add accumulation data to database
 function bd_accumulations_add_db_accumulations($accumulation_data)
 {
-   global $wpdb;   
-   
+   global $wpdb;
+
    $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
    $time = current_time('timestamp');
-   
+
    $wpdb->insert(
       $table_name,
       array(
-         'timestamp'    => $time,
-         'mantraName'   => $accumulation_data['mantra_name'],
-         'userName'     => $accumulation_data['user_name'],
-         'tally'        => $accumulation_data['accum'],
+         'timestamp'       => $time,
+         'challengeID'     => $accumulation_data['challenge_id'],
+         'userID'          => $accumulation_data['user_id'],
+         'tally'           => $accumulation_data['accum'],
       ),
       array(
          '%d',
-         '%s',
-         '%s',
+         '%f',
+         '%f',
          '%f'
-         )
-      );
-      
-      /* Debug */
-      // bd_pretty_debug($wpdb->insert);
-      // $wpdb->show_errors();
-      // error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
+      )
+   );
+
+   /* Debug */
+   // bd_pretty_debug($wpdb->insert);
+   // $wpdb->show_errors();
+   // error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
 }
 
 // Add mantra data to database
@@ -298,6 +409,12 @@ function bd_accumulations_add_db_mantras($data)
    // $wpdb->print_error(); // Show error if any
 
 }
+
+/**
+ * =========================
+ * Update the data in the database
+ * =========================
+ */
 
 function bd_accumulations_update_accumulation_data()
 {

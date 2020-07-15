@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: WP Accumualtions
+ * Plugin Name: WP Accumulations
  * Plugin URI: https://foobot.bain.design
  * Description: Accumulations
  * Author: Bain Design
@@ -22,7 +22,7 @@
 	// Admin
 	// include( $path . 'admin/admin.php');
 	// include( $path . 'admin/mantras.php');
-	// include( $path . 'admin/challenges.php');
+	include( $path . 'admin/challenges.php');
 	include( $path . 'admin/counts.php');
 
 	// Frontend
@@ -58,3 +58,4 @@ add_action('plugins_loaded', 'bd324_acc_plugin_init');
 // Create database tables on plugin activation
 register_activation_hook(__FILE__, 'bd_accumulations_create_mantra_table');
 register_activation_hook(__FILE__, 'bd_accumulations_create_accumulation_table');
+register_activation_hook(__FILE__, 'bd_accumulations_create_challenge_table');
