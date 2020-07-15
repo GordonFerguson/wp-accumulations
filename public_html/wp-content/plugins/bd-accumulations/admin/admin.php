@@ -17,6 +17,24 @@ function bd324_acc_add_admin_menu()
       'bd324_acc_options_page',
       'dashicons-plus' // TODO: Replace with SVG icon
    );
+   /*
+   add_submenu_page(
+      'bd-accumulations',
+      __('Accumulations', '_bd324-accmulations'),
+      __('Accumulations', '_bd324-accmulations'),
+      'manage_options',
+      'bd-accumulations',       // Menu Slug
+   );
+
+   add_submenu_page(
+      'bd-accumulations',
+      __('Challenges', '_bd324-accmulations'),
+      __('Challenges', '_bd324-accmulations'),
+      'manage_options',
+      'admin.php?page=bd-accum-goals',       // Menu Slug
+      'bd324_accum_goals_page',              // Function
+   );
+
 
    add_submenu_page(
       'bd-accumulations',
@@ -27,14 +45,7 @@ function bd324_acc_add_admin_menu()
       'bd324_accum_mantras_page',
    );
 
-   add_submenu_page(
-      'bd-accumulations',
-      __('Goals', '_bd324-accmulations'),
-      __('Goals', '_bd324-accmulations'),
-      'manage_options',
-      'admin.php?page=bd-accum-goals',
-      // 'bd324_accum_goals_page',
-   );
+*/
 }
 
 function bd324_settings_link($links)
@@ -100,29 +111,25 @@ function bd324_acc_settings_init()
       'bd324Foobot', // Page to display on
       'bd324-foobot-api-creds' // Section ID
    );
+
+   // Add mantra
+   add_settings_field(
+      'bd324_acc_add_mantra', // ID
+      __('Add Mantra', '_bd324-accmulations'), // Label
+      'bd324_acc_add_mantra_form_page_handler', // Callback
+      'bd324Foobot', // Page to display on
+      'bd324-foobot-api-creds' // Section ID
+   );
 }
 
-function bd324_acc_api_user_field_render()
-{
-   $options = get_option('bd324_acc_api_settings');
-?>
-   <input type='email' name='bd324_acc_api_settings[bd324_acc_api_user]' placeholder='<?php _e("Your API email", '_bd324-accmulations'); ?>' value='<?php echo esc_html($options['bd324_acc_api_user']); ?>'>
-<?php
-}
 
-function bd324_acc_api_key_field_render()
-{
-   $options = get_option('bd324_acc_api_settings');
-?>
-   <textarea rows="7" cols="50" name='bd324_acc_api_settings[bd324_acc_api_key]' placeholder='<?php _e("Your API key", '_bd324-accmulations'); ?>'><?php echo esc_textarea($options['bd324_acc_api_key']); ?></textarea>
-<?php
-}
+
 /**
  * Render the settings section content
  */
 function bd324_acc_settings_section_callback()
 {
-   _e('Add your Foobot API credentials below. An API key can be obtained at <a href="https://api.foobot.io/apidoc/index.html">api.foobot.io</a>.', '_bd324-accmulations');
+   _e('Add (or subtract) accumulations here.', '_bd324-accmulations');
 }
 
 /**
@@ -165,22 +172,4 @@ function bd324_acc_goals_page()
 <?php
 }
 
-// Form to add accumulation via Admin screen
-function bd324_acc_add_accumulation_form_page_handler()
-{
-   echo '<form method="POST" action="?page=add_data">
-   <label>Mantra Name: </label><input type="text" name="mantra_name" /><br />
-   <label>Accumulations: </label><input type="number" name="accum" /><br />
-  <input type="submit" value="submit" />
-  </form>';
 
-   $default = array(
-      'mantra_name' => '',
-      'accum' => '',
-   );
-   $item = shortcode_atts($default, $_REQUEST);
-   // Debug
-   bd_pretty_debug($_REQUEST, $name = '_REQUEST');
-
-   bd_accumulations_add_db_accumulations($item);
-}

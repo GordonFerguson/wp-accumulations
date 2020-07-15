@@ -197,65 +197,31 @@ function bd_accumulations_fetch_db_accumulations()
 // Add accumulation data to database
 function bd_accumulations_add_db_accumulations($accumulation_data)
 {
-
-   error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
-
-   global $wpdb;
-   // Turn on errors display
-   $wpdb->show_errors();
-
+   global $wpdb;   
+   
    $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
    $time = current_time('timestamp');
-
-   // Loop each accumulation
-   foreach ($accumulation_data as $data) {
-      $accumulation_data = array();
-
-      // Debug
-      bd_pretty_debug( $accumulation_data, $name = 'accumulation_data' );
-
-      // Loop the accumulation data
-      foreach ($data as $key => $value) {
-         $accumulation_data[] = array($key => $value);
-         //echo '<pre><code>';
-         //var_dump( $key. ' ' .$value );
-         //echo '</code></pre>';
-
-         //echo '<h5>accumulation data in loop</h5>';
-         //echo '<pre><code>';
-         //var_dump( $accumulation_data );
-         //echo '</code></pre>';
-      }
-      //echo '<h5>accumulation data after loop</h5>';
-      //echo '<pre><code>';
-      //var_dump( $accumulation_data );
-      //echo '</code></pre>';
-
-      //echo '<pre><code>';
-      //var_dump( $uuid );
-      //echo '</code></pre>';
-
-      // Insert data into db table
-      $wpdb->insert(
-         $table_name,
-         array(
-            'timestamp' => $time,
-            'mantraName' => $accumulation_data['mantra_name'],
-            'tally' => $accumulation_data['accum'],
-         ),
-         array(
-            '%d',
-            '%s',
-            '%f'
+   
+   $wpdb->insert(
+      $table_name,
+      array(
+         'timestamp'    => $time,
+         'mantraName'   => $accumulation_data['mantra_name'],
+         'userName'     => $accumulation_data['user_name'],
+         'tally'        => $accumulation_data['accum'],
+      ),
+      array(
+         '%d',
+         '%s',
+         '%s',
+         '%f'
          )
       );
-
-      // error_log("EVENT: accumulation data inserted in table for " . $uuid, 0);
-
-      // Show error if any
-      //$wpdb->print_error();
-
-   }
+      
+      /* Debug */
+      // bd_pretty_debug($wpdb->insert);
+      // $wpdb->show_errors();
+      // error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
 }
 
 // Add mantra data to database

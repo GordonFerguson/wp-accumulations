@@ -18,10 +18,17 @@
 
 	include( $path . 'lib/debug.php');
 	include( $path . 'includes/database.php');
-	include( $path . 'admin/admin.php');
+
+	// Admin
+	// include( $path . 'admin/admin.php');
+	// include( $path . 'admin/mantras.php');
+	// include( $path . 'admin/challenges.php');
+	include( $path . 'admin/counts.php');
+
+	// Frontend
 	include( $path . 'includes/shortcodes.php');
 	include( $path . 'includes/accumulations.php');
-	include( $path . 'includes/api.php');
+	// include( $path . 'includes/api.php');
 
 	// Misc
 	include( $path . 'includes/helpers.php');
