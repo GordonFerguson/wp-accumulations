@@ -25,7 +25,8 @@ $bd_accumulations_mantra_db_version = '0.3';
 
 // challenges
 global $bd_accumulations_challenge_db_version;
-$bd_accumulations_challenge_db_version = '0.10';
+$bd_accumulations_challenge_db_version = '0.11';
+// 0.11 adds
 
 /** Get Options
  * ============
@@ -105,6 +106,7 @@ function bd_accumulations_create_challenge_table()
       idUser tinytext NOT NULL,
       challengeName tinytext NOT NULL,
       tally float NULL,
+      toDate float NULL,
       PRIMARY KEY  (id)
    ) $charset_collate;";
 
@@ -216,7 +218,7 @@ function bd_accumulations_fetch_db_accumulations()
 function bd_accumulations_fetch_db_challenge($id)
 {
    global $wpdb;
-   $wpdb->show_errors();
+// todo   $wpdb->show_errors();
 
    // Vars
    $table_name = $wpdb->prefix . 'bd_accumulations_challenge_data';
@@ -244,25 +246,10 @@ function bd_accumulations_fetch_db_challenge($id)
 function bd_accumulations_add_db_accumulations($field_map)
 {
    global $wpdb;
-
+  error_log("FUNCTION: bd_accumulations_add_db_accumulations", 0);
    $table_name = $wpdb->prefix . 'bd_accumulations_accumulation_data';
-   $time = current_time('timestamp');
-
-   $wpdb->insert(
-      $table_name,
-      array(
-         'timestamp'       => $time,
-         'challengeID'     => $accumulation_data['challenge_id'],
-         'userID'          => $accumulation_data['user_id'],
-         'tally'           => $accumulation_data['accum'],
-      ),
-      array(
-         '%d',
-         '%f',
-         '%f',
-         '%f'
-      )
-   );
+  $field_map['timestamp']= current_time('timestamp');
+  $wpdb->insert($table_name, $field_map);
 
    /* Debug */
    // bd_pretty_debug($wpdb->insert);

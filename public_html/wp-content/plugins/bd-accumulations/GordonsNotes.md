@@ -20,7 +20,9 @@ In code
 1. First commit: added a bit of css to help me read the page.
 2. Second commit: 'normalize' the table structure.
 3. Third commit: Get the three sortcodes working with the new table structure
-4. TODO : refine adding hours
-    - show existing accumulation for selected challenge
-    - 'find or create' : treat the entered accumulation as total to date
+4. Also refine adding hours
+    - assumming there is only one entry per challenge
+    - so, add a soFar column to the challenge table
+    - show existing so for selected challenge
+    - update the challenge on submit.
 
