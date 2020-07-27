@@ -11,12 +11,6 @@
 // Show the data from a specific accumulation
 function bd_accumulations_shortcode_show_mantras($atts)
 {
-  // e.g. [foobot-show-data accumulation="BainBot"]
-
-  // Debug
-  // error_log("== SHORTCODE: Start [foobot-show-data] ==", 0);
-  // error_log("FUNCTION: bd_accumulations_shortcode_show_mantras", 0);
-
 
   // Get attributes from shortcode
   $accumulation_data = shortcode_atts(array(
@@ -59,21 +53,11 @@ function bd_accumulations_shortcode_add()
 add_shortcode('acc_form', 'bd_accumulations_shortcode_add');
 
 /**
- * Show challenge data
+ * Show challenge data for the current user
  */
 function bd_accumulations_shortcode_challenges($atts)
 {
-  // Get attributes from shortcode
-  $challenge_data = shortcode_atts(array(
-    'id' => '',
-  ), $atts);
-
-  // Store atts in var
-  $id = $challenge_data["id"];
-
-  // Get total tally for challenge
-  
-
+  $rows = bd324_acc_fetch_challenge_rows(get_current_user_id());
   ob_start();
     $total = bd324_acc_fetch_challenge_total( $id );
     $name = bd324_acc_fetch_challenge_name( $id );

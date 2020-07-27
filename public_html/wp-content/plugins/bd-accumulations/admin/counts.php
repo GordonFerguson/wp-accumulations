@@ -39,12 +39,13 @@ function bd324_acc_add_accumulation_form()
 
    $action = esc_url( admin_url("admin-post.php") );
    echo '<form method="POST" action="'. $action .'">';
-   echo '<select name="challenge_id"  id="challenge_id"  class="select-select2">';
-   echo '<option value="">Select Challenge</option>';
+   echo "<input type='hidden' name='action' value='add_to_tally'>";
+   echo '<select name="challenge"  id="challenge"  class="select-select2">';
 
-   foreach ($result as $row) {
-      $id   = $row->id;
-      $name = $row->challengeName;
+   echo '<option value="">Select Challenge</option>'; // title
+   foreach ($result as $accumulation_row) {
+      $id   = $accumulation_row->id;
+      $name = $accumulation_row->challengeName;
       echo '<option value = '.$id.'>'.$name.'</option>';
    }
    echo '</select></br>';

@@ -237,10 +237,11 @@ function bd_accumulations_fetch_db_challenge($id)
  * =========================
  * Add data to the database
  * =========================
+ * @param $field_map array column_name->column_value
  */
 
 // Add accumulation data to database
-function bd_accumulations_add_db_accumulations($accumulation_data)
+function bd_accumulations_add_db_accumulations($field_map)
 {
    global $wpdb;
 

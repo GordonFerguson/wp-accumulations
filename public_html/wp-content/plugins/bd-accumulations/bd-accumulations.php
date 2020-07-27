@@ -28,6 +28,7 @@
 	// Frontend
 	include( $path . 'includes/shortcodes.php');
 	include( $path . 'includes/accumulations.php');
+	include( $path . 'includes/mantras.php');
 	// include( $path . 'includes/api.php');
 
 	// Misc
