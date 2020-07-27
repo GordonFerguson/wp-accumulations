@@ -42,8 +42,11 @@
 function bd324_acc_plugin_init()
 {
 
+
 	function bdf_enqueue_styles() {
+		wp_enqueue_script( 'gjf-demo', plugins_url( 'assets/gjf_demo.js', __FILE__ ),array('jquery') );
 		wp_enqueue_style( 'bdf-style', plugins_url( 'assets/style.css', __FILE__ ), false );
+		wp_enqueue_style( 'gjf-style', plugins_url( 'assets/gjf_styles.css', __FILE__ ), false );
 		wp_enqueue_style( 'bdf-fonts', 'https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap', false );
 	}
 	add_action('wp_enqueue_scripts','bdf_enqueue_styles');

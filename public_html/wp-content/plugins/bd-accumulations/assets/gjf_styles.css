@@ -1,0 +1,21 @@
+/* simplistic styles for demo: fighting with wp's twentynineteen
+sort that out another time . main goal is see what I'm doing*/
+.wp-block-group {
+    background-color: #c0e5c0;
+}
+.entry .entry-content > .mbd-mantras {
+    background-color: #d7c0e5;
+    padding: 0.5rem;
+}
+.entry .entry-content > .mbd-challenges {
+    background-color: #e5dfc0;
+    padding: 0.5rem;
+}
+.entry .entry-content > .mdg-accumulation-form {
+    padding: 0.5rem;
+}
+@media only screen and (min-width: 768px) {
+    .mbd-block-group .wp-block-group__inner-container > * {margin: 3px 0 !important; }
+}
+.mbd-block-group  p.gjf-para { margin: 3px !important; font-weight: bold;}
+.mbd-block-group  .mantra-line { margin: 1px 1rem 0 0;}
