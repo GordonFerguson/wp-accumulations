@@ -21,11 +21,18 @@ function bd_accumulations_shortcode_show_mantras($atts)
   $accumulation_name = $accumulation_data["accumulation"];
 
   // Show the data
-  $output = bd_accumulations_show_mantras($accumulation_name); // mantras.php
+  $mantras = bd_accumulations_all_mantras($accumulation_name); // mantras.php
 
   // Output mantra data
   ob_start();
-  echo $output;
+  if (empty($mantras)) {
+    echo 'No Mantras are available';
+  } else {
+    foreach ($mantras as $mantra) {
+//      bd_pretty_debug($mantra);
+      echo '<div class="mantra-line" style="margin: 0;">'.$mantra->mantraName. ':  ' . $mantra->mantraDesc. '</div>';
+    }
+  }
 
   $content =  ob_get_contents();
   ob_clean();
@@ -35,7 +42,7 @@ function bd_accumulations_shortcode_show_mantras($atts)
 
   return $content;
 }
-add_shortcode('foobot-show-data', 'bd_accumulations_shortcode_show_mantras');
+add_shortcode('foobot_show_data', 'bd_accumulations_shortcode_show_mantras');
 
 /**
  * Show a form to add or subtract accumulations
@@ -59,10 +66,15 @@ function bd_accumulations_shortcode_challenges($atts)
 {
   $rows = bd324_acc_fetch_challenge_rows(get_current_user_id());
   ob_start();
-    $total = bd324_acc_fetch_challenge_total( $id );
-    $name = bd324_acc_fetch_challenge_name( $id );
+    echo "<h5 style='color: darkred;'>TODO: student add/edit this list.</h5>";
     //bd_pretty_debug($name);
-    echo $name[0]->challengeName . ': ' . $total . '<br>';
+    if (empty($rows)) {
+      echo 'No challenges found. Are you logged in as a student?<br>';
+    } else {
+      foreach ($rows as $challenge_row) {
+        echo  $challenge_row->challengeName. ': goal is ' . $challenge_row->tally. '<br>';
+      }
+    }
     $content =  ob_get_contents();
   ob_clean();
 
